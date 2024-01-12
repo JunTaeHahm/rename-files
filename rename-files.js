@@ -3,10 +3,10 @@ const fs = require('fs');
 const path = require('path');
 
 // .env 파일에서 환경 변수 가져오기
-const DIRECTORY_PATH = '/Users/hahmjuntae/Desktop/hahmjuntae/forbiz/GUI';
-const OLD_STRING = '[GUI]'; // 수정 전 문자열
+const DIRECTORY_PATH = '/Users/hahmjuntae/Desktop/workspace/asset/icons';
+const OLD_STRING = 'juntae'; // 수정 전 문자열
 const NEW_STRING = ''; // 수정 후 문자열
-const PREFIX_STRING = '[GUI] '; // 접두어
+const PREFIX_STRING = 'dayes '; // 접두어
 const SUFFIX_STRING = ''; // 접미어
 
 // #region 파일명 앞에 접두어 추가
@@ -135,9 +135,31 @@ function removeLastChars(dir, num) {
 }
 // #endregion
 
+// #region 파일 이름을 대문자 또는 소문자로 변경
+function changeCase(dir, type = 'lower') {
+  const files = fs.readdirSync(dir);
+
+  files.forEach((file) => {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+
+    if (stat.isDirectory()) {
+      changeCase(filePath, type);
+    } else {
+      const newFileName = type === 'lower' ? file.toLowerCase() : file.toUpperCase();
+      const newFilePath = path.join(dir, newFileName);
+
+      fs.renameSync(filePath, newFilePath);
+
+      console.log('변경한 파일: ', newFilePath);
+    }
+  });
+}
+// #endregion
+
 // #region Playground
 // 접두어 추가
-addPrefixToFileNames(DIRECTORY_PATH);
+// addPrefixToFileNames(DIRECTORY_PATH);
 
 // 접미어 추가
 // addSuffixToFileNames(DIRECTORY_PATH);
@@ -149,5 +171,8 @@ addPrefixToFileNames(DIRECTORY_PATH);
 // deleteFilesToFileNames(DIRECTORY_PATH);
 
 // 파일 이름 뒤에서 특정 자리수 만큼 제거
-// removeLastChars(DIRECTORY_PATH, 14);
+// removeLastChars(DIRECTORY_PATH, 6);
+
+// 파일 이름 대/소문자 변경
+changeCase(DIRECTORY_PATH, 'lower');
 // #endregion
